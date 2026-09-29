@@ -1,14 +1,31 @@
-const SUPABASE_URL = "https://uklivylyenatdqbgmcxy.supabase.co";
+const SUPABASE_URL =
+    "https://uklivylyenatdqbgmcxy.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_ntlKWYQvMXlCs_obIEVIIA_-CfxOFTJ";
 
-const WHATSAPP_NUMBER = "201070845123";
+const WHATSAPP_NUMBER =
+    "201070845123";
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
+
+/*
+    المتجر العام يستخدم جلسة بدون تسجيل دخول
+    حتى لا يرث Login الموظف الموجود في نفس المتصفح.
+*/
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+            auth: {
+                persistSession: false,
+                autoRefreshToken: false,
+                detectSessionInUrl: false
+            }
+        }
+    );
+
 
 let selectedProduct = null;
 
@@ -17,7 +34,11 @@ let selectedProduct = null;
    اختيار المنتج
 ========================= */
 
-function openOrder(productId, productName, productPrice) {
+function openOrder(
+    productId,
+    productName,
+    productPrice
+) {
 
     selectedProduct = {
         id: productId,
@@ -25,12 +46,21 @@ function openOrder(productId, productName, productPrice) {
         price: productPrice
     };
 
-    document.getElementById("selectedProduct").innerText =
+
+    document.getElementById(
+        "selectedProduct"
+    ).innerText =
         `المنتج المختار: ${productName} - ${productPrice} جنيه`;
 
-    document.getElementById("orderSection").style.display = "block";
 
-    document.getElementById("orderSection").scrollIntoView({
+    document.getElementById(
+        "orderSection"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "orderSection"
+    ).scrollIntoView({
         behavior: "smooth"
     });
 }
@@ -49,34 +79,53 @@ async function sendOrder() {
 
 
     const name =
-        document.getElementById("customerName").value.trim();
+        document
+            .getElementById("customerName")
+            .value
+            .trim();
+
 
     const phone =
-        document.getElementById("customerPhone").value.trim();
+        document
+            .getElementById("customerPhone")
+            .value
+            .trim();
+
 
     const address =
-        document.getElementById("customerAddress").value.trim();
+        document
+            .getElementById("customerAddress")
+            .value
+            .trim();
+
 
     const paymentFile =
-        document.getElementById("paymentProof").files[0];
+        document
+            .getElementById("paymentProof")
+            .files[0];
 
 
-    /* التحقق من البيانات */
+    /* =========================
+       التأكد من البيانات
+    ========================= */
 
     if (!name) {
         alert("من فضلك اكتب الاسم.");
         return;
     }
 
+
     if (!phone) {
         alert("من فضلك اكتب رقم الموبايل.");
         return;
     }
 
+
     if (!address) {
         alert("من فضلك اكتب العنوان.");
         return;
     }
+
 
     if (!paymentFile) {
         alert("من فضلك ارفع صورة إثبات الدفع.");
@@ -84,7 +133,9 @@ async function sendOrder() {
     }
 
 
-    /* أنواع الصور المسموحة */
+    /* =========================
+       التأكد من نوع الصورة
+    ========================= */
 
     const allowedTypes = [
         "image/jpeg",
@@ -93,7 +144,11 @@ async function sendOrder() {
     ];
 
 
-    if (!allowedTypes.includes(paymentFile.type)) {
+    if (
+        !allowedTypes.includes(
+            paymentFile.type
+        )
+    ) {
 
         alert(
             "نوع الصورة غير مسموح.\n\n" +
@@ -104,9 +159,14 @@ async function sendOrder() {
     }
 
 
-    /* الحد الأقصى 5MB */
+    /* =========================
+       حجم الصورة
+    ========================= */
 
-    if (paymentFile.size > 5 * 1024 * 1024) {
+    if (
+        paymentFile.size >
+        5 * 1024 * 1024
+    ) {
 
         alert(
             "حجم الصورة كبير جدًا.\n\n" +
@@ -123,16 +183,18 @@ async function sendOrder() {
 
 
         /* =========================
-           رقم الطلب
+           إنشاء رقم الطلب
         ========================= */
 
         const orderNumber =
             "ORD-" +
-            Date.now().toString().slice(-8);
+            Date.now()
+                .toString()
+                .slice(-8);
 
 
         /* =========================
-           اسم ملف الصورة
+           امتداد الصورة
         ========================= */
 
         const fileExtension =
@@ -150,14 +212,19 @@ async function sendOrder() {
            رفع صورة الدفع
         ========================= */
 
-        const { data: uploadData, error: uploadError } =
+        const {
+            data: uploadData,
+            error: uploadError
+        } =
             await supabaseClient.storage
                 .from("payment-proofs")
                 .upload(
                     filePath,
                     paymentFile,
                     {
-                        contentType: paymentFile.type,
+                        contentType:
+                            paymentFile.type,
+
                         upsert: false
                     }
                 );
@@ -170,10 +237,11 @@ async function sendOrder() {
                 uploadError
             );
 
+
             alert(
                 "حصلت مشكلة أثناء رفع صورة الدفع.\n\n" +
                 "الخطأ:\n" +
-                (uploadError.message || "خطأ غير معروف")
+                uploadError.message
             );
 
             return;
@@ -187,31 +255,43 @@ async function sendOrder() {
 
 
         /* =========================
-           حفظ الطلب في قاعدة البيانات
+           حفظ الطلب
         ========================= */
 
-        const { data: orderData, error: insertError } =
+        const {
+            data: orderData,
+            error: insertError
+        } =
             await supabaseClient
                 .from("orders")
                 .insert({
 
-                    order_number: orderNumber,
+                    order_number:
+                        orderNumber,
 
-                    product_id: selectedProduct.id,
+                    product_id:
+                        selectedProduct.id,
 
-                    product_name: selectedProduct.name,
+                    product_name:
+                        selectedProduct.name,
 
-                    product_price: selectedProduct.price,
+                    product_price:
+                        selectedProduct.price,
 
-                    customer_name: name,
+                    customer_name:
+                        name,
 
-                    customer_phone: phone,
+                    customer_phone:
+                        phone,
 
-                    customer_address: address,
+                    customer_address:
+                        address,
 
-                    payment_proof_url: filePath,
+                    payment_proof_url:
+                        filePath,
 
-                    status: "pending"
+                    status:
+                        "pending"
 
                 })
                 .select();
@@ -237,7 +317,7 @@ async function sendOrder() {
             alert(
                 "الصورة اترفعت، لكن حصلت مشكلة أثناء حفظ الطلب.\n\n" +
                 "الخطأ:\n" +
-                (insertError.message || "خطأ غير معروف")
+                insertError.message
             );
 
             return;
@@ -283,11 +363,13 @@ ${address}
 
 
         const whatsappURL =
-            `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                message
+            )}`;
 
 
         /* =========================
-           رسالة نجاح
+           نجاح الطلب
         ========================= */
 
         alert(
@@ -296,8 +378,6 @@ ${address}
         );
 
 
-        /* فتح واتساب */
-
         window.open(
             whatsappURL,
             "_blank"
@@ -305,16 +385,27 @@ ${address}
 
 
         /* =========================
-           تنظيف النموذج
+           تنظيف البيانات
         ========================= */
 
-        document.getElementById("customerName").value = "";
+        document.getElementById(
+            "customerName"
+        ).value = "";
 
-        document.getElementById("customerPhone").value = "";
 
-        document.getElementById("customerAddress").value = "";
+        document.getElementById(
+            "customerPhone"
+        ).value = "";
 
-        document.getElementById("paymentProof").value = "";
+
+        document.getElementById(
+            "customerAddress"
+        ).value = "";
+
+
+        document.getElementById(
+            "paymentProof"
+        ).value = "";
 
 
     } catch (error) {
@@ -327,7 +418,8 @@ ${address}
 
         alert(
             "حصل خطأ غير متوقع.\n\n" +
-            (error.message || "خطأ غير معروف")
+            (error.message ||
+                "خطأ غير معروف")
         );
     }
 }
