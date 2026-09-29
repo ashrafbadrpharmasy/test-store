@@ -1,690 +1,460 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
 
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-    <title>
-        لوحة الطلبات - متجر اختبار
-    </title>
-
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4fff7;
-            color: #173b27;
-        }
-
-
-        header {
-            background: #16834b;
-            color: white;
-
-            padding: 20px;
-
-            display: flex;
-
-            justify-content: space-between;
-            align-items: center;
-
-            gap: 15px;
-        }
-
-
-        .logout-btn,
-        .refresh-btn {
-            border: none;
-
-            padding: 10px 15px;
-
-            border-radius: 8px;
-
-            cursor: pointer;
-        }
-
-
-        .logout-btn {
-            background: white;
-            color: #16834b;
-        }
-
-
-        .refresh-btn {
-            background: #16834b;
-            color: white;
-        }
-
-
-        .container {
-            width: 95%;
-            max-width: 1400px;
-
-            margin: 25px auto;
-        }
-
-
-        .stats {
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    auto-fit,
-                    minmax(180px, 1fr)
-                );
-
-            gap: 15px;
-
-            margin-bottom: 20px;
-        }
-
-
-        .stat {
-            background: white;
-
-            padding: 18px;
-
-            border-radius: 14px;
-
-            box-shadow:
-                0 5px 20px
-                rgba(0,0,0,0.07);
-
-            text-align: center;
-        }
-
-
-        .stat strong {
-            display: block;
-
-            color: #16834b;
-
-            font-size: 28px;
-
-            margin-top: 5px;
-        }
-
-
-        .toolbar {
-            background: white;
-
-            padding: 18px;
-
-            border-radius: 14px;
-
-            margin-bottom: 20px;
-
-            display: flex;
-
-            gap: 10px;
-
-            flex-wrap: wrap;
-        }
-
-
-        .toolbar input,
-        .toolbar select {
-            padding: 12px;
-
-            border: 1px solid #ccc;
-
-            border-radius: 8px;
-
-            font-size: 15px;
-        }
-
-
-        .orders {
-            display: grid;
-
-            gap: 20px;
-        }
-
-
-        .order-card {
-            background: white;
-
-            padding: 20px;
-
-            border-radius: 16px;
-
-            box-shadow:
-                0 5px 20px
-                rgba(0,0,0,0.07);
-        }
-
-
-        .order-header {
-            display: flex;
-
-            justify-content: space-between;
-
-            flex-wrap: wrap;
-
-            gap: 10px;
-
-            margin-bottom: 15px;
-        }
-
-
-        .order-number {
-            color: #16834b;
-
-            font-size: 20px;
-
-            font-weight: bold;
-        }
-
-
-        .date {
-            color: #777;
-
-            font-size: 14px;
-        }
-
-
-        .info {
-            display: grid;
-
-            grid-template-columns:
-                repeat(
-                    auto-fit,
-                    minmax(220px, 1fr)
-                );
-
-            gap: 10px;
-
-            margin-bottom: 15px;
-        }
-
-
-        .info-box {
-            background: #f7fbf8;
-
-            padding: 12px;
-
-            border-radius: 10px;
-        }
-
-
-        .info-box strong {
-            display: block;
-
-            margin-bottom: 5px;
-        }
-
-
-        .status-row {
-            display: flex;
-
-            gap: 10px;
-
-            align-items: center;
-
-            flex-wrap: wrap;
-
-            margin-top: 15px;
-        }
-
-
-        .status-row select {
-            padding: 11px;
-
-            border: 1px solid #ccc;
-
-            border-radius: 8px;
-        }
-
-
-        .save-btn,
-        .proof-btn,
-        .whatsapp-btn {
-            border: none;
-
-            padding: 11px 15px;
-
-            border-radius: 8px;
-
-            cursor: pointer;
-
-            color: white;
-
-            text-decoration: none;
-        }
-
-
-        .save-btn {
-            background: #16834b;
-        }
-
-
-        .proof-btn {
-            display: inline-block;
-
-            margin-top: 10px;
-
-            background: #333;
-        }
-
-
-        .whatsapp-btn {
-            background: #25D366;
-        }
-
-
-        .empty {
-            background: white;
-
-            padding: 40px;
-
-            text-align: center;
-
-            border-radius: 14px;
-        }
-
-
-        .error {
-            background: #ffecec;
-
-            color: #a00000;
-
-            padding: 15px;
-
-            border-radius: 10px;
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>لوحة الموظف</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4fff7;
+    color: #173b27;
+}
+
+header {
+    background: #16834b;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.logout {
+    background: white;
+    color: #16834b;
+}
+
+.container {
+    width: 95%;
+    max-width: 1400px;
+    margin: 25px auto;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(160px,1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,.06);
+}
+
+.stat strong {
+    display: block;
+    color: #16834b;
+    font-size: 26px;
+    margin-top: 5px;
+}
+
+.toolbar {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.toolbar input,
+.toolbar select {
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.orders {
+    display: grid;
+    gap: 18px;
+}
+
+.order {
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 5px 18px rgba(0,0,0,.06);
+}
+
+.order-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.number {
+    color: #16834b;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(210px,1fr));
+    gap: 8px;
+}
+
+.info div {
+    background: #f7fbf8;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.status {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.status select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.save {
+    background: #16834b;
+    color: white;
+}
+
+.whatsapp {
+    background: #25D366;
+    color: white;
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+.proof {
+    display: inline-block;
+    margin-top: 10px;
+    background: #333;
+    color: white;
+    text-decoration: none;
+    padding: 9px 12px;
+    border-radius: 8px;
+}
+
+.completed-section {
+    margin-top: 150px;
+    padding-top: 25px;
+    border-top: 2px dashed #ccdccc;
+}
+
+.completed-title {
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.order.completed {
+    padding: 10px 14px;
+    opacity: .65;
+}
+
+.order.completed .info,
+.order.completed .proof {
+    display: none;
+}
+
+.order.completed .number {
+    font-size: 15px;
+}
+
+.empty {
+    background: white;
+    padding: 35px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+@media(max-width:600px) {
+    .toolbar {
+        flex-direction: column;
+    }
+}
+
+</style>
 
 </head>
-
 
 <body>
 
 <header>
 
-    <h1>
-        لوحة الموظف
-    </h1>
+<h2>لوحة الموظف</h2>
 
-    <button
-        class="logout-btn"
-        onclick="logout()">
-
-        تسجيل الخروج
-
-    </button>
+<button class="logout" onclick="logout()">
+تسجيل الخروج
+</button>
 
 </header>
 
-
 <main class="container">
 
+<section class="stats">
 
-    <section class="stats">
+<div class="stat">
+كل الطلبات
+<strong id="total">0</strong>
+</div>
 
-        <div class="stat">
-            كل الطلبات
-            <strong id="totalCount">0</strong>
-        </div>
+<div class="stat">
+قيد المراجعة
+<strong id="pending">0</strong>
+</div>
 
-        <div class="stat">
-            قيد المراجعة
-            <strong id="pendingCount">0</strong>
-        </div>
+<div class="stat">
+تم التأكيد
+<strong id="confirmed">0</strong>
+</div>
 
-        <div class="stat">
-            تم التأكيد
-            <strong id="confirmedCount">0</strong>
-        </div>
+<div class="stat">
+جاري التجهيز
+<strong id="preparing">0</strong>
+</div>
 
-        <div class="stat">
-            جاري التجهيز
-            <strong id="preparingCount">0</strong>
-        </div>
+<div class="stat">
+تم الشحن
+<strong id="shipped">0</strong>
+</div>
 
-        <div class="stat">
-            تم الشحن
-            <strong id="shippedCount">0</strong>
-        </div>
+<div class="stat">
+تم التسليم
+<strong id="delivered">0</strong>
+</div>
 
-        <div class="stat">
-            تم التسليم
-            <strong id="deliveredCount">0</strong>
-        </div>
+</section>
 
-    </section>
+<section class="toolbar">
 
+<input
+id="search"
+placeholder="بحث برقم الطلب أو الاسم أو الهاتف"
+oninput="render()">
 
-    <section class="toolbar">
+<select id="filter" onchange="render()">
 
-        <input
-            type="text"
-            id="search"
-            placeholder="ابحث برقم الطلب أو الاسم أو الهاتف"
-            oninput="renderOrders()">
+<option value="all">كل الحالات</option>
+<option value="pending">قيد المراجعة</option>
+<option value="confirmed">تم التأكيد</option>
+<option value="preparing">جاري التجهيز</option>
+<option value="shipped">تم الشحن</option>
+<option value="delivered">تم التسليم</option>
 
+</select>
 
-        <select
-            id="filterStatus"
-            onchange="renderOrders()">
+<button class="save" onclick="loadOrders()">
+تحديث
+</button>
 
-            <option value="all">
-                كل الحالات
-            </option>
+</section>
 
-            <option value="pending">
-                قيد المراجعة
-            </option>
-
-            <option value="confirmed">
-                تم التأكيد
-            </option>
-
-            <option value="preparing">
-                جاري التجهيز
-            </option>
-
-            <option value="shipped">
-                تم الشحن
-            </option>
-
-            <option value="delivered">
-                تم التسليم
-            </option>
-
-        </select>
-
-
-        <button
-            class="refresh-btn"
-            onclick="loadOrders()">
-
-            تحديث الطلبات
-
-        </button>
-
-    </section>
-
-
-    <p id="loading">
-        جاري تحميل الطلبات...
-    </p>
-
-
-    <section
-        id="orders"
-        class="orders">
-    </section>
-
+<section id="orders" class="orders"></section>
 
 </main>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
 const SUPABASE_URL =
-    "https://uklivylyenatdqbgmcxy.supabase.co";
+"https://uklivylyenatdqbgmcxy.supabase.co";
 
-
-const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_ntlKWYQvMXlCs_obIEVIIA_-CfxOFTJ";
-
+const SUPABASE_KEY =
+"sb_publishable_ntlKWYQvMXlCs_obIEVIIA_-CfxOFTJ";
 
 const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-    );
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
+let orders = [];
 
-let allOrders = [];
-
-
-/* =========================
-   التحقق من الموظف
-========================= */
 
 async function checkLogin() {
 
-    const {
-        data
-    } =
+    const { data } =
         await supabaseClient.auth.getSession();
 
-
     if (!data.session) {
-
-        window.location.href =
-            "/admin/login.html";
-
+        location.href = "/admin/login.html";
         return false;
     }
-
 
     return true;
 }
 
 
-/* =========================
-   تحميل الطلبات
-========================= */
-
 async function loadOrders() {
 
-    if (!await checkLogin()) {
-        return;
-    }
+    if (!await checkLogin()) return;
 
-
-    const loading =
-        document.getElementById(
-            "loading"
-        );
-
-
-    loading.innerText =
-        "جاري تحميل الطلبات...";
-
-
-    const {
-        data,
-        error
-    } =
+    const { data, error } =
         await supabaseClient
             .from("orders")
             .select("*")
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
-
+            .order("created_at", {
+                ascending: false
+            });
 
     if (error) {
-
         console.error(error);
-
-        loading.innerText = "";
-
-        document.getElementById(
-            "orders"
-        ).innerHTML = `
-            <div class="error">
-                ${error.message}
-            </div>
-        `;
-
+        document.getElementById("orders").innerHTML =
+            `<div class="empty">${error.message}</div>`;
         return;
     }
 
-
-    allOrders = data || [];
-
+    orders = data || [];
 
     updateStats();
-
-
-    renderOrders();
-
-
-    loading.innerText =
-        `آخر تحديث: ${
-            new Date().toLocaleTimeString("ar-EG")
-        }`;
+    render();
 }
 
-
-/* =========================
-   الإحصائيات
-========================= */
 
 function updateStats() {
 
-    const count =
-        status =>
-            allOrders.filter(
-                order =>
-                    order.status === status
-            ).length;
+    document.getElementById("total").textContent =
+        orders.length;
 
+    ["pending","confirmed","preparing","shipped","delivered"]
+        .forEach(status => {
 
-    document.getElementById(
-        "totalCount"
-    ).innerText =
-        allOrders.length;
+            document.getElementById(status).textContent =
+                orders.filter(o => o.status === status).length;
 
-
-    document.getElementById(
-        "pendingCount"
-    ).innerText =
-        count("pending");
-
-
-    document.getElementById(
-        "confirmedCount"
-    ).innerText =
-        count("confirmed");
-
-
-    document.getElementById(
-        "preparingCount"
-    ).innerText =
-        count("preparing");
-
-
-    document.getElementById(
-        "shippedCount"
-    ).innerText =
-        count("shipped");
-
-
-    document.getElementById(
-        "deliveredCount"
-    ).innerText =
-        count("delivered");
+        });
 }
 
 
-/* =========================
-   عرض الطلبات
-========================= */
-
-async function renderOrders() {
-
-    const container =
-        document.getElementById(
-            "orders"
-        );
-
+async function render() {
 
     const search =
-        document.getElementById(
-            "search"
-        ).value
-            .trim()
-            .toLowerCase();
-
+        document.getElementById("search")
+            .value.trim().toLowerCase();
 
     const filter =
-        document.getElementById(
-            "filterStatus"
-        ).value;
+        document.getElementById("filter").value;
 
 
-    let filtered =
-        allOrders.filter(
-            order => {
+    let list =
+        orders.filter(o => {
 
-                const matchesSearch =
-                    !search ||
-                    order.order_number
-                        .toLowerCase()
-                        .includes(search) ||
+            const searchOK =
+                !search ||
+                o.order_number.toLowerCase().includes(search) ||
+                o.customer_name.toLowerCase().includes(search) ||
+                o.customer_phone.includes(search);
 
-                    order.customer_name
-                        .toLowerCase()
-                        .includes(search) ||
+            const filterOK =
+                filter === "all" ||
+                o.status === filter;
 
-                    order.customer_phone
-                        .includes(search);
-
-
-                const matchesStatus =
-                    filter === "all" ||
-                    order.status === filter;
+            return searchOK && filterOK;
+        });
 
 
-                return (
-                    matchesSearch &&
-                    matchesStatus
-                );
-            }
-        );
+    list.sort((a,b) => {
+
+        if (a.status === "delivered" &&
+            b.status !== "delivered") return 1;
+
+        if (a.status !== "delivered" &&
+            b.status === "delivered") return -1;
+
+        return new Date(b.created_at) -
+               new Date(a.created_at);
+    });
 
 
-    if (filtered.length === 0) {
-
-        container.innerHTML = `
-            <div class="empty">
-                لا توجد طلبات مطابقة.
-            </div>
-        `;
-
-        return;
-    }
-
+    const container =
+        document.getElementById("orders");
 
     container.innerHTML = "";
 
 
-    for (const order of filtered) {
+    if (!list.length) {
 
-        let proofButton = "";
+        container.innerHTML =
+            `<div class="empty">لا توجد طلبات.</div>`;
+
+        return;
+    }
 
 
-        if (order.payment_proof_url) {
+    let activeAdded = false;
+    let completedSection = null;
 
-            const {
-                data,
-                error
-            } =
+
+    for (const order of list) {
+
+        const completed =
+            order.status === "delivered";
+
+
+        if (completed && !completedSection) {
+
+            completedSection =
+                document.createElement("section");
+
+            completedSection.className =
+                "completed-section";
+
+            completedSection.innerHTML =
+                `<h2 class="completed-title">
+                    الطلبات التي تم تسليمها
+                </h2>`;
+
+            container.appendChild(completedSection);
+        }
+
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            completed
+                ? "order completed"
+                : "order";
+
+
+        const phone =
+            order.customer_phone
+                .replace(/\D/g,"")
+                .replace(/^0/,"20");
+
+
+        let proof = "";
+
+
+        if (order.payment_proof_url && !completed) {
+
+            const { data } =
                 await supabaseClient.storage
                     .from("payment-proofs")
                     .createSignedUrl(
@@ -692,298 +462,192 @@ async function renderOrders() {
                         3600
                     );
 
+            if (data?.signedUrl) {
 
-            if (
-                !error &&
-                data?.signedUrl
-            ) {
-
-                proofButton = `
-                    <a
-                        class="proof-btn"
-                        href="${data.signedUrl}"
-                        target="_blank">
-                        فتح إثبات الدفع
-                    </a>
-                `;
+                proof =
+                    `<a class="proof"
+                       href="${data.signedUrl}"
+                       target="_blank">
+                       فتح إثبات الدفع
+                    </a>`;
             }
         }
 
 
-        const date =
-            new Date(
-                order.created_at
-            ).toLocaleString(
-                "ar-EG"
-            );
-
-
-        const customerPhone =
-            order.customer_phone
-                .replace(/\D/g, "")
-                .replace(/^0/, "20");
-
-
-        const card =
-            document.createElement(
-                "div"
-            );
-
-
-        card.className =
-            "order-card";
-
-
         card.innerHTML = `
 
-            <div class="order-header">
+            <div class="order-head">
 
-                <div class="order-number">
+                <div class="number">
                     ${order.order_number}
                 </div>
 
-                <div class="date">
-                    ${date}
-                </div>
+                <small>
+                    ${new Date(order.created_at)
+                        .toLocaleString("ar-EG")}
+                </small>
 
             </div>
 
+            ${
+                completed
+                ? `
+                    <div class="status">
+                        <strong>
+                            تم التسليم ✅
+                        </strong>
 
-            <div class="info">
+                        <a
+                            class="whatsapp"
+                            target="_blank"
+                            href="https://wa.me/${phone}">
+                            مراسلة العميل
+                        </a>
+                    </div>
+                `
+                : `
+                    <div class="info">
 
-                <div class="info-box">
-                    <strong>
-                        المنتج
-                    </strong>
-                    ${order.product_name}
-                </div>
+                        <div>
+                            <strong>المنتج</strong>
+                            ${order.product_name}
+                        </div>
 
+                        <div>
+                            <strong>السعر</strong>
+                            ${order.product_price} جنيه
+                        </div>
 
-                <div class="info-box">
-                    <strong>
-                        السعر
-                    </strong>
-                    ${order.product_price}
-                    جنيه
-                </div>
+                        <div>
+                            <strong>العميل</strong>
+                            ${order.customer_name}
+                        </div>
 
+                        <div>
+                            <strong>الهاتف</strong>
+                            ${order.customer_phone}
+                        </div>
 
-                <div class="info-box">
-                    <strong>
-                        اسم العميل
-                    </strong>
-                    ${order.customer_name}
-                </div>
+                        <div>
+                            <strong>العنوان</strong>
+                            ${order.customer_address}
+                        </div>
 
+                        <div>
+                            <strong>الحالة</strong>
+                            ${label(order.status)}
+                        </div>
 
-                <div class="info-box">
-                    <strong>
-                        الهاتف
-                    </strong>
-                    ${order.customer_phone}
-                </div>
+                    </div>
 
+                    ${proof}
 
-                <div class="info-box">
-                    <strong>
-                        العنوان
-                    </strong>
-                    ${order.customer_address}
-                </div>
+                    <div class="status">
 
+                        <select id="s-${order.id}">
 
-                <div class="info-box">
-                    <strong>
-                        الحالة
-                    </strong>
-                    ${getStatusLabel(order.status)}
-                </div>
+                            ${options(order.status)}
 
-            </div>
+                        </select>
 
+                        <button
+                            class="save"
+                            onclick="updateStatus(${order.id})">
+                            حفظ الحالة
+                        </button>
 
-            ${proofButton}
+                        <a
+                            class="whatsapp"
+                            target="_blank"
+                            href="https://wa.me/${phone}">
+                            مراسلة العميل
+                        </a>
 
-
-            <div class="status-row">
-
-                <select
-                    id="status-${order.id}">
-
-                    ${statusOptions(
-                        order.status
-                    )}
-
-                </select>
-
-
-                <button
-                    class="save-btn"
-                    onclick="updateStatus(${order.id})">
-
-                    حفظ الحالة
-
-                </button>
-
-
-                <a
-                    class="whatsapp-btn"
-                    target="_blank"
-                    href="https://wa.me/${customerPhone}?text=${encodeURIComponent(
-                        "مرحبًا، بخصوص طلبك " +
-                        order.order_number
-                    )}">
-
-                    مراسلة العميل
-
-                </a>
-
-            </div>
+                    </div>
+                `
+            }
         `;
 
 
-        container.appendChild(
-            card
-        );
+        if (completed) {
+            completedSection.appendChild(card);
+        } else {
+            container.appendChild(card);
+            activeAdded = true;
+        }
     }
 }
 
 
-/* =========================
-   الحالات
-========================= */
+function options(current) {
 
-function getStatusLabel(status) {
-
-    const labels = {
-
-        pending:
-            "قيد المراجعة",
-
-        confirmed:
-            "تم التأكيد",
-
-        preparing:
-            "جاري التجهيز",
-
-        shipped:
-            "تم الشحن",
-
-        delivered:
-            "تم التسليم"
-    };
-
-
-    return labels[status] ||
-        status;
-}
-
-
-function statusOptions(current) {
-
-    const statuses = [
-
-        ["pending", "قيد المراجعة"],
-
-        ["confirmed", "تم التأكيد"],
-
-        ["preparing", "جاري التجهيز"],
-
-        ["shipped", "تم الشحن"],
-
-        ["delivered", "تم التسليم"]
-
+    const list = [
+        ["pending","قيد المراجعة"],
+        ["confirmed","تم التأكيد"],
+        ["preparing","جاري التجهيز"],
+        ["shipped","تم الشحن"],
+        ["delivered","تم التسليم"]
     ];
 
-
-    return statuses
-        .map(
-            ([value, label]) => `
-                <option
-                    value="${value}"
-                    ${
-                        value === current
-                            ? "selected"
-                            : ""
-                    }>
-                    ${label}
-                </option>
-            `
-        )
-        .join("");
+    return list.map(x =>
+        `<option value="${x[0]}"
+        ${x[0] === current ? "selected" : ""}>
+        ${x[1]}
+        </option>`
+    ).join("");
 }
 
 
-/* =========================
-   تحديث الحالة
-========================= */
+function label(status) {
 
-async function updateStatus(orderId) {
+    const labels = {
+        pending: "قيد المراجعة",
+        confirmed: "تم التأكيد",
+        preparing: "جاري التجهيز",
+        shipped: "تم الشحن",
+        delivered: "تم التسليم"
+    };
 
-    const select =
-        document.getElementById(
-            `status-${orderId}`
-        );
-
-
-    const newStatus =
-        select.value;
+    return labels[status] || status;
+}
 
 
-    const {
-        error
-    } =
+async function updateStatus(id) {
+
+    const status =
+        document.getElementById(`s-${id}`).value;
+
+
+    const { error } =
         await supabaseClient
             .from("orders")
-            .update({
-                status: newStatus
-            })
-            .eq("id", orderId);
+            .update({ status })
+            .eq("id", id);
 
 
     if (error) {
 
-        console.error(error);
-
-        alert(
-            "حصل خطأ:\n\n" +
-            error.message
-        );
-
+        alert(error.message);
         return;
     }
 
 
     await loadOrders();
 
-
-    alert(
-        "تم تحديث حالة الطلب ✅"
-    );
+    alert("تم تحديث الحالة ✅");
 }
 
-
-/* =========================
-   تسجيل الخروج
-========================= */
 
 async function logout() {
 
     await supabaseClient.auth.signOut();
 
-    window.location.href =
+    location.href =
         "/admin/login.html";
 }
 
 
-/* =========================
-   تشغيل اللوحة
-========================= */
-
 loadOrders();
-
-
-/* تحديث تلقائي كل 15 ثانية */
 
 setInterval(
     loadOrders,
