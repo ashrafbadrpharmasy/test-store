@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>متجر اختبار</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <h1>متجر اختبار</h1>
+        <p>أهلاً بيك في متجرنا</p>
+    </header>
+
+    <main>
+
+        <section class="products">
+
+            <!-- المنتج 1 -->
+            <div class="product">
+                <div class="product-image">
+                    صورة المنتج
+                </div>
+
+                <h2>منتج رقم 1</h2>
+
+                <p>
+                    وصف تجريبي للمنتج رقم 1
+                </p>
+
+                <strong>100 جنيه</strong>
+
+                <button onclick="openOrder(1, 'منتج رقم 1', 100)">
+                    اطلب المنتج
+                </button>
+            </div>
+
+
+            <!-- المنتج 2 -->
+            <div class="product">
+                <div class="product-image">
+                    صورة المنتج
+                </div>
+
+                <h2>منتج رقم 2</h2>
+
+                <p>
+                    وصف تجريبي للمنتج رقم 2
+                </p>
+
+                <strong>200 جنيه</strong>
+
+                <button onclick="openOrder(2, 'منتج رقم 2', 200)">
+                    اطلب المنتج
+                </button>
+            </div>
+
+
+            <!-- المنتج 3 -->
+            <div class="product">
+                <div class="product-image">
+                    صورة المنتج
+                </div>
+
+                <h2>منتج رقم 3</h2>
+
+                <p>
+                    وصف تجريبي للمنتج رقم 3
+                </p>
+
+                <strong>400 جنيه</strong>
+
+                <button onclick="openOrder(3, 'منتج رقم 3', 400)">
+                    اطلب المنتج
+                </button>
+            </div>
+
+
+            <!-- المنتج 4 -->
+            <div class="product">
+                <div class="product-image">
+                    صورة المنتج
+                </div>
+
+                <h2>منتج رقم 4</h2>
+
+                <p>
+                    وصف تجريبي للمنتج رقم 4
+                </p>
+
+                <strong>500 جنيه</strong>
+
+                <button onclick="openOrder(4, 'منتج رقم 4', 500)">
+                    اطلب المنتج
+                </button>
+            </div>
+
+        </section>
+
+
+        <!-- نموذج الطلب -->
+        <section id="orderSection" class="order-section">
+
+            <h2>بيانات الطلب</h2>
+
+            <p id="selectedProduct"></p>
+
+            <input
+                type="text"
+                id="customerName"
+                placeholder="الاسم الثلاثي"
+            >
+
+            <input
+                type="tel"
+                id="customerPhone"
+                placeholder="رقم الموبايل"
+            >
+
+            <textarea
+                id="customerAddress"
+                placeholder="العنوان بالتفصيل"
+            ></textarea>
+
+            <h3>إثبات الدفع</h3>
+
+            <input
+                type="file"
+                id="paymentProof"
+                accept="image/*"
+            >
+
+            <button onclick="sendOrder()">
+                إرسال الطلب
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
