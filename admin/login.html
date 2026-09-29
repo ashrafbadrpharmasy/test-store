@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>تسجيل دخول الموظف</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4fff7;
+
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 18px;
+
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+            text-align: center;
+        }
+
+        h1 {
+            color: #16834b;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+
+            padding: 14px;
+
+            margin-bottom: 12px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 10px;
+
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+
+            border: none;
+
+            background: #16834b;
+            color: white;
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #10683b;
+        }
+
+        #message {
+            margin-top: 15px;
+            color: #c62828;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-box">
+
+        <h1>لوحة الموظف</h1>
+
+        <p>سجل الدخول لإدارة الطلبات</p>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="البريد الإلكتروني"
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="كلمة المرور"
+        >
+
+        <button onclick="login()">
+            تسجيل الدخول
+        </button>
+
+        <div id="message"></div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        const SUPABASE_URL =
+            "https://uklivylyenatdqbgmcxy.supabase.co";
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "sb_publishable_ntlKWYQvMXlCs_obIEVIIA_-CfxOFTJ";
+
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+
+        async function login() {
+
+            const email =
+                document.getElementById("email").value.trim();
+
+            const password =
+                document.getElementById("password").value;
+
+            const message =
+                document.getElementById("message");
+
+
+            if (!email || !password) {
+                message.textContent =
+                    "اكتب البريد الإلكتروني وكلمة المرور.";
+                return;
+            }
+
+
+            const { error } =
+                await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+
+            if (error) {
+
+                console.error(error);
+
+                message.textContent =
+                    "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+                return;
+            }
+
+
+            window.location.href =
+                "/admin/dashboard.html";
+        }
+    </script>
+
+</body>
+
+</html>
