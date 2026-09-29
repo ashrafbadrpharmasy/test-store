@@ -13,6 +13,10 @@ const supabaseClient = window.supabase.createClient(
 let selectedProduct = null;
 
 
+/* =========================
+   اختيار المنتج
+========================= */
+
 function openOrder(productId, productName, productPrice) {
 
     selectedProduct = {
@@ -32,12 +36,17 @@ function openOrder(productId, productName, productPrice) {
 }
 
 
+/* =========================
+   إرسال الطلب
+========================= */
+
 async function sendOrder() {
 
     if (!selectedProduct) {
         alert("من فضلك اختار منتج أولاً.");
         return;
     }
+
 
     const name =
         document.getElementById("customerName").value.trim();
@@ -52,11 +61,22 @@ async function sendOrder() {
         document.getElementById("paymentProof").files[0];
 
 
-    if (!name || !phone || !address) {
-        alert("من فضلك اكتب الاسم ورقم الموبايل والعنوان.");
+    /* التحقق من البيانات */
+
+    if (!name) {
+        alert("من فضلك اكتب الاسم.");
         return;
     }
 
+    if (!phone) {
+        alert("من فضلك اكتب رقم الموبايل.");
+        return;
+    }
+
+    if (!address) {
+        alert("من فضلك اكتب العنوان.");
+        return;
+    }
 
     if (!paymentFile) {
         alert("من فضلك ارفع صورة إثبات الدفع.");
@@ -64,35 +84,37 @@ async function sendOrder() {
     }
 
 
+    /* أنواع الصور المسموحة */
+
     const allowedTypes = [
         "image/jpeg",
         "image/png",
         "image/webp"
     ];
 
+
     if (!allowedTypes.includes(paymentFile.type)) {
-        alert("مسموح فقط JPG أو PNG أو WEBP.");
+
+        alert(
+            "نوع الصورة غير مسموح.\n\n" +
+            "المسموح: JPG أو PNG أو WEBP"
+        );
+
         return;
     }
 
+
+    /* الحد الأقصى 5MB */
 
     if (paymentFile.size > 5 * 1024 * 1024) {
-        alert("حجم الصورة يجب ألا يتعدى 5 ميجابايت.");
+
+        alert(
+            "حجم الصورة كبير جدًا.\n\n" +
+            "الحد الأقصى 5 ميجابايت."
+        );
+
         return;
     }
-
-
-    const orderNumber =
-        "ORD-" +
-        Date.now().toString().slice(-8);
-
-
-    const fileExtension =
-        paymentFile.name.split(".").pop().toLowerCase();
-
-
-    const filePath =
-        `orders/${orderNumber}.${fileExtension}`;
 
 
     try {
@@ -100,58 +122,138 @@ async function sendOrder() {
         alert("جاري إرسال الطلب...");
 
 
-        // رفع صورة إثبات الدفع
-        const { error: uploadError } =
+        /* =========================
+           رقم الطلب
+        ========================= */
+
+        const orderNumber =
+            "ORD-" +
+            Date.now().toString().slice(-8);
+
+
+        /* =========================
+           اسم ملف الصورة
+        ========================= */
+
+        const fileExtension =
+            paymentFile.name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+
+        const filePath =
+            `orders/${orderNumber}.${fileExtension}`;
+
+
+        /* =========================
+           رفع صورة الدفع
+        ========================= */
+
+        const { data: uploadData, error: uploadError } =
             await supabaseClient.storage
                 .from("payment-proofs")
-                .upload(filePath, paymentFile, {
-                    contentType: paymentFile.type,
-                    upsert: false
-                });
+                .upload(
+                    filePath,
+                    paymentFile,
+                    {
+                        contentType: paymentFile.type,
+                        upsert: false
+                    }
+                );
 
 
         if (uploadError) {
-            console.error(uploadError);
-            alert("حصلت مشكلة أثناء رفع صورة الدفع.");
+
+            console.error(
+                "UPLOAD ERROR:",
+                uploadError
+            );
+
+            alert(
+                "حصلت مشكلة أثناء رفع صورة الدفع.\n\n" +
+                "الخطأ:\n" +
+                (uploadError.message || "خطأ غير معروف")
+            );
+
             return;
         }
 
 
-        // حفظ الطلب في قاعدة البيانات
-        const { error: insertError } =
+        console.log(
+            "UPLOAD SUCCESS:",
+            uploadData
+        );
+
+
+        /* =========================
+           حفظ الطلب في قاعدة البيانات
+        ========================= */
+
+        const { data: orderData, error: insertError } =
             await supabaseClient
                 .from("orders")
                 .insert({
+
                     order_number: orderNumber,
 
                     product_id: selectedProduct.id,
+
                     product_name: selectedProduct.name,
+
                     product_price: selectedProduct.price,
 
                     customer_name: name,
+
                     customer_phone: phone,
+
                     customer_address: address,
 
                     payment_proof_url: filePath,
 
                     status: "pending"
-                });
+
+                })
+                .select();
 
 
         if (insertError) {
-            console.error(insertError);
 
-            // حذف الصورة لو حفظ الطلب فشل
+            console.error(
+                "DATABASE ERROR:",
+                insertError
+            );
+
+
+            /* حذف الصورة لو حفظ الطلب فشل */
+
             await supabaseClient.storage
                 .from("payment-proofs")
-                .remove([filePath]);
+                .remove([
+                    filePath
+                ]);
 
-            alert("حصلت مشكلة أثناء حفظ الطلب.");
+
+            alert(
+                "الصورة اترفعت، لكن حصلت مشكلة أثناء حفظ الطلب.\n\n" +
+                "الخطأ:\n" +
+                (insertError.message || "خطأ غير معروف")
+            );
+
             return;
         }
 
 
-        // تجهيز رسالة واتساب للموظف
+        console.log(
+            "ORDER SAVED:",
+            orderData
+        );
+
+
+        /* =========================
+           رسالة واتساب
+        ========================= */
+
         const message = `
 طلب جديد من متجر اختبار
 
@@ -184,25 +286,48 @@ ${address}
             `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
 
+        /* =========================
+           رسالة نجاح
+        ========================= */
+
         alert(
-            `تم تسجيل طلبك بنجاح!\n\nرقم الطلب: ${orderNumber}`
+            `تم تسجيل الطلب بنجاح ✅\n\n` +
+            `رقم الطلب: ${orderNumber}`
         );
 
 
-        window.open(whatsappURL, "_blank");
+        /* فتح واتساب */
+
+        window.open(
+            whatsappURL,
+            "_blank"
+        );
 
 
-        // تنظيف النموذج
+        /* =========================
+           تنظيف النموذج
+        ========================= */
+
         document.getElementById("customerName").value = "";
+
         document.getElementById("customerPhone").value = "";
+
         document.getElementById("customerAddress").value = "";
+
         document.getElementById("paymentProof").value = "";
 
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "GENERAL ERROR:",
+            error
+        );
 
-        alert("حصل خطأ غير متوقع أثناء إرسال الطلب.");
+
+        alert(
+            "حصل خطأ غير متوقع.\n\n" +
+            (error.message || "خطأ غير معروف")
+        );
     }
 }
