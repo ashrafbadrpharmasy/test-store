@@ -1,263 +1,119 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>متجر اختبار</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <header class="header">
-        <div>
-            <h1>متجر اختبار</h1>
-            <p>أهلاً بيك في متجرنا</p>
-        </div>
-    </header>
+<header class="header">
+    <h1>متجر اختبار</h1>
+    <p>أهلاً بيك في متجرنا</p>
+</header>
 
+<main>
 
-    <main>
+    <section class="products">
 
-        <!-- المنتجات -->
-
-        <section class="products">
-
-            <div class="product">
-
-                <div class="product-image">
-                    صورة المنتج
-                </div>
-
-                <h2>منتج رقم 1</h2>
-
-                <p>
-                    وصف تجريبي للمنتج رقم 1
-                </p>
-
-                <strong>
-                    100 جنيه
-                </strong>
-
-                <button
-                    onclick="openOrder(1, 'منتج رقم 1', 100)">
-                    اطلب المنتج
-                </button>
-
-            </div>
-
-
-            <div class="product">
-
-                <div class="product-image">
-                    صورة المنتج
-                </div>
-
-                <h2>منتج رقم 2</h2>
-
-                <p>
-                    وصف تجريبي للمنتج رقم 2
-                </p>
-
-                <strong>
-                    200 جنيه
-                </strong>
-
-                <button
-                    onclick="openOrder(2, 'منتج رقم 2', 200)">
-                    اطلب المنتج
-                </button>
-
-            </div>
-
-
-            <div class="product">
-
-                <div class="product-image">
-                    صورة المنتج
-                </div>
-
-                <h2>منتج رقم 3</h2>
-
-                <p>
-                    وصف تجريبي للمنتج رقم 3
-                </p>
-
-                <strong>
-                    400 جنيه
-                </strong>
-
-                <button
-                    onclick="openOrder(3, 'منتج رقم 3', 400)">
-                    اطلب المنتج
-                </button>
-
-            </div>
-
-
-            <div class="product">
-
-                <div class="product-image">
-                    صورة المنتج
-                </div>
-
-                <h2>منتج رقم 4</h2>
-
-                <p>
-                    وصف تجريبي للمنتج رقم 4
-                </p>
-
-                <strong>
-                    500 جنيه
-                </strong>
-
-                <button
-                    onclick="openOrder(4, 'منتج رقم 4', 500)">
-                    اطلب المنتج
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- نموذج الطلب -->
-
-        <section
-            id="orderSection"
-            class="order-section">
-
-            <h2>بيانات الطلب</h2>
-
-            <p
-                id="selectedProduct"
-                class="selected-product">
-            </p>
-
-
-            <input
-                type="text"
-                id="customerName"
-                placeholder="الاسم الثلاثي">
-
-
-            <input
-                type="tel"
-                id="customerPhone"
-                placeholder="رقم الموبايل">
-
-
-            <textarea
-                id="customerAddress"
-                placeholder="العنوان بالتفصيل">
-            </textarea>
-
-
-            <h3>
-                إثبات الدفع
-            </h3>
-
-
-            <input
-                type="file"
-                id="paymentProof"
-                accept="image/jpeg,image/png,image/webp">
-
-
-            <button
-                id="sendOrderButton"
-                onclick="sendOrder()">
-                إرسال الطلب
+        <div class="product">
+            <div class="product-image">صورة المنتج</div>
+            <h2>منتج رقم 1</h2>
+            <p>وصف تجريبي للمنتج رقم 1</p>
+            <strong>100 جنيه</strong>
+            <button onclick="openOrder(1,'منتج رقم 1',100)">
+                اطلب المنتج
             </button>
+        </div>
+
+        <div class="product">
+            <div class="product-image">صورة المنتج</div>
+            <h2>منتج رقم 2</h2>
+            <p>وصف تجريبي للمنتج رقم 2</p>
+            <strong>200 جنيه</strong>
+            <button onclick="openOrder(2,'منتج رقم 2',200)">
+                اطلب المنتج
+            </button>
+        </div>
+
+        <div class="product">
+            <div class="product-image">صورة المنتج</div>
+            <h2>منتج رقم 3</h2>
+            <p>وصف تجريبي للمنتج رقم 3</p>
+            <strong>400 جنيه</strong>
+            <button onclick="openOrder(3,'منتج رقم 3',400)">
+                اطلب المنتج
+            </button>
+        </div>
+
+        <div class="product">
+            <div class="product-image">صورة المنتج</div>
+            <h2>منتج رقم 4</h2>
+            <p>وصف تجريبي للمنتج رقم 4</p>
+            <strong>500 جنيه</strong>
+            <button onclick="openOrder(4,'منتج رقم 4',500)">
+                اطلب المنتج
+            </button>
+        </div>
+
+    </section>
 
 
-            <!-- نتيجة الطلب -->
+    <section id="orderSection" class="box hidden">
 
-            <div
-                id="orderResult"
-                class="order-result">
+        <h2>بيانات الطلب</h2>
 
-                <h3>
-                    تم تسجيل طلبك بنجاح ✅
-                </h3>
+        <div id="selectedProduct" class="selected"></div>
 
-                <p>
-                    رقم طلبك:
-                </p>
+        <input id="customerName" placeholder="الاسم الثلاثي">
+        <input id="customerPhone" type="tel" placeholder="رقم الموبايل">
+        <textarea id="customerAddress" placeholder="العنوان بالتفصيل"></textarea>
 
-                <strong
-                    id="newOrderNumber">
-                </strong>
+        <h3>إثبات الدفع</h3>
 
-                <p>
-                    احتفظ برقم الطلب لمتابعة حالته.
-                </p>
+        <input
+            id="paymentProof"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+        >
 
-                <button
-                    onclick="focusTracking()">
-                    تتبع الطلب
-                </button>
+        <button id="sendOrderButton" onclick="sendOrder()">
+            إرسال الطلب
+        </button>
 
-            </div>
+        <div id="orderResult" class="success hidden">
+            <h3>تم تسجيل طلبك بنجاح ✅</h3>
+            <p>رقم طلبك:</p>
+            <strong id="newOrderNumber"></strong>
+            <p>احتفظ بالرقم لمتابعة طلبك.</p>
+            <button onclick="focusTracking()">تتبع الطلب</button>
+        </div>
 
-        </section>
-
-
-        <!-- تتبع الطلب -->
-
-        <section
-            id="trackingSection"
-            class="tracking-section">
-
-            <h2>
-                تتبع طلبك
-            </h2>
-
-            <p>
-                اكتب رقم الطلب لمعرفة حالته.
-            </p>
+    </section>
 
 
-            <div class="tracking-form">
+    <section id="trackingSection" class="box">
 
-                <input
-                    type="text"
-                    id="trackingNumber"
-                    placeholder="مثال: ORD-12345678">
+        <h2>تتبع طلبك</h2>
+        <p>اكتب رقم الطلب لمعرفة حالته.</p>
 
+        <div class="track-form">
+            <input id="trackingNumber" placeholder="ORD-XXXXXXXX">
+            <button onclick="trackOrder()">تتبع الطلب</button>
+            <button class="dark" onclick="refreshTracking()">🔄 تحديث</button>
+        </div>
 
-                <button
-                    onclick="trackOrder()">
-                    تتبع الطلب
-                </button>
+        <div id="trackingMessage"></div>
+        <div id="trackingResult"></div>
 
-            </div>
+    </section>
 
+</main>
 
-            <div
-                id="trackingMessage"
-                class="tracking-message">
-            </div>
-
-
-            <div
-                id="trackingResult"
-                class="tracking-result">
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
 
 </body>
-
 </html>
