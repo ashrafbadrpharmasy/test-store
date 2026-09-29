@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>لوحة الطلبات - متجر اختبار</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4fff7;
+            color: #173b27;
+        }
+
+        header {
+            background: #16834b;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .logout-btn {
+            background: white;
+            color: #16834b;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 25px auto;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 18px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+        }
+
+        .top-bar h2 {
+            margin-bottom: 8px;
+        }
+
+        #loading {
+            color: #777;
+        }
+
+        .orders {
+            display: grid;
+            gap: 20px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .order-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #16834b;
+        }
+
+        .date {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info-box {
+            background: #f7fbf8;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .status-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        select {
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .save-btn,
+        .whatsapp-btn {
+            border: none;
+            padding: 11px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .save-btn {
+            background: #16834b;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+        }
+
+        .proof-btn {
+            display: inline-block;
+            margin-top: 10px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+
+        .empty {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 14px;
+        }
+
+        .error {
+            background: #ffecec;
+            color: #a00000;
+            padding: 15px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>لوحة الموظف - متجر اختبار</h1>
+
+        <button class="logout-btn" onclick="logout()">
+            تسجيل الخروج
+        </button>
+    </header>
+
+
+    <main class="container">
+
+        <div class="top-bar">
+            <h2>الطلبات</h2>
+            <p id="loading">جاري تحميل الطلبات...</p>
+        </div>
+
+        <section id="orders" class="orders"></section>
+
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        const SUPABASE_URL =
+            "https://uklivylyenatdqbgmcxy.supabase.co";
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "sb_publishable_ntlKWYQvMXlCs_obIEVIIA_-CfxOFTJ";
+
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+
+        async function checkLogin() {
+
+            const { data } =
+                await supabaseClient.auth.getSession();
+
+            if (!data.session) {
+                window.location.href = "/admin/login.html";
+                return false;
+            }
+
+            return true;
+        }
+
+
+        async function loadOrders() {
+
+            const loggedIn = await checkLogin();
+
+            if (!loggedIn) {
+                return;
+            }
+
+
+            const ordersContainer =
+                document.getElementById("orders");
+
+            const loading =
+                document.getElementById("loading");
+
+
+            const { data, error } =
+                await supabaseClient
+                    .from("orders")
+                    .select("*")
+                    .order("created_at", {
+                        ascending: false
+                    });
+
+
+            if (error) {
+
+                console.error(error);
+
+                loading.textContent = "";
+
+                ordersContainer.innerHTML = `
+                    <div class="error">
+                        حصلت مشكلة أثناء تحميل الطلبات.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            loading.textContent =
+                `عدد الطلبات: ${data.length}`;
+
+
+            if (data.length === 0) {
+
+                ordersContainer.innerHTML = `
+                    <div class="empty">
+                        لا توجد طلبات حتى الآن.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            ordersContainer.innerHTML = "";
+
+
+            for (const order of data) {
+
+                let proofButton = "";
+
+
+                if (order.payment_proof_url) {
+
+                    const { data: signedData, error: signedError } =
+                        await supabaseClient.storage
+                            .from("payment-proofs")
+                            .createSignedUrl(
+                                order.payment_proof_url,
+                                3600
+                            );
+
+
+                    if (!signedError && signedData?.signedUrl) {
+
+                        proofButton = `
+                            <a
+                                class="proof-btn"
+                                href="${signedData.signedUrl}"
+                                target="_blank"
+                            >
+                                فتح إثبات الدفع
+                            </a>
+                        `;
+                    }
+                }
+
+
+                const createdDate =
+                    new Date(order.created_at)
+                        .toLocaleString("ar-EG");
+
+
+                const whatsappMessage =
+                    `طلب ${order.order_number}%0A` +
+                    `اسم العميل: ${order.customer_name}%0A` +
+                    `المنتج: ${order.product_name}`;
+
+
+                const card = document.createElement("div");
+
+                card.className = "order-card";
+
+
+                card.innerHTML = `
+                    <div class="order-header">
+                        <div class="order-number">
+                            ${order.order_number}
+                        </div>
+
+                        <div class="date">
+                            ${createdDate}
+                        </div>
+                    </div>
+
+
+                    <div class="info">
+
+                        <div class="info-box">
+                            <strong>المنتج</strong>
+                            ${order.product_name}
+                        </div>
+
+                        <div class="info-box">
+                            <strong>السعر</strong>
+                            ${order.product_price} جنيه
+                        </div>
+
+                        <div class="info-box">
+                            <strong>اسم العميل</strong>
+                            ${order.customer_name}
+                        </div>
+
+                        <div class="info-box">
+                            <strong>رقم الموبايل</strong>
+                            ${order.customer_phone}
+                        </div>
+
+                        <div class="info-box">
+                            <strong>العنوان</strong>
+                            ${order.customer_address}
+                        </div>
+
+                        <div class="info-box">
+                            <strong>الحالة الحالية</strong>
+                            ${order.status}
+                        </div>
+
+                    </div>
+
+
+                    ${proofButton}
+
+
+                    <div class="status-row">
+
+                        <select id="status-${order.id}">
+
+                            <option value="pending"
+                                ${order.status === "pending" ? "selected" : ""}>
+                                Pending - قيد المراجعة
+                            </option>
+
+                            <option value="confirmed"
+                                ${order.status === "confirmed" ? "selected" : ""}>
+                                Confirmed - تم التأكيد
+                            </option>
+
+                            <option value="preparing"
+                                ${order.status === "preparing" ? "selected" : ""}>
+                                Preparing - جاري التجهيز
+                            </option>
+
+                            <option value="shipped"
+                                ${order.status === "shipped" ? "selected" : ""}>
+                                Shipped - تم الشحن
+                            </option>
+
+                            <option value="delivered"
+                                ${order.status === "delivered" ? "selected" : ""}>
+                                Delivered - تم التسليم
+                            </option>
+
+                        </select>
+
+
+                        <button
+                            class="save-btn"
+                            onclick="updateStatus(${order.id})"
+                        >
+                            حفظ الحالة
+                        </button>
+
+
+                        <a
+                            class="whatsapp-btn"
+                            href="https://wa.me/2${order.customer_phone.replace(/^0/, '')}?text=${whatsappMessage}"
+                            target="_blank"
+                            style="text-decoration:none;"
+                        >
+                            مراسلة العميل
+                        </a>
+
+                    </div>
+                `;
+
+
+                ordersContainer.appendChild(card);
+            }
+        }
+
+
+        async function updateStatus(orderId) {
+
+            const select =
+                document.getElementById(`status-${orderId}`);
+
+            const newStatus =
+                select.value;
+
+
+            const { error } =
+                await supabaseClient
+                    .from("orders")
+                    .update({
+                        status: newStatus
+                    })
+                    .eq("id", orderId);
+
+
+            if (error) {
+
+                console.error(error);
+
+                alert("حصل خطأ أثناء تحديث الحالة.");
+                return;
+            }
+
+
+            alert("تم تحديث حالة الطلب.");
+
+            loadOrders();
+        }
+
+
+        async function logout() {
+
+            await supabaseClient.auth.signOut();
+
+            window.location.href =
+                "/admin/login.html";
+        }
+
+
+        loadOrders();
+    </script>
+
+</body>
+
+</html>
