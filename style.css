@@ -8,42 +8,59 @@ body {
     font-family: Arial, sans-serif;
     background: #f4fff7;
     color: #173b27;
+    line-height: 1.6;
 }
 
 .header {
     background: #16834b;
     color: white;
     text-align: center;
-    padding: 35px 20px;
+    padding: 40px 20px;
 }
 
 .header h1 {
+    font-size: 34px;
     margin-bottom: 8px;
 }
 
+.header p {
+    opacity: 0.95;
+}
+
 .products {
-    width: 90%;
-    max-width: 1100px;
+    width: 92%;
+    max-width: 1200px;
     margin: 35px auto;
 
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(230px, 1fr)
+    );
 
-    gap: 20px;
+    gap: 22px;
 }
 
 .product {
     background: white;
     padding: 20px;
-    border-radius: 15px;
 
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.07);
 
     text-align: center;
+
+    transition: transform 0.2s;
+}
+
+.product:hover {
+    transform: translateY(-4px);
 }
 
 .product-image {
-    height: 180px;
+    height: 190px;
 
     background: #dff5e7;
 
@@ -51,33 +68,33 @@ body {
     align-items: center;
     justify-content: center;
 
-    border-radius: 12px;
+    border-radius: 14px;
 
     margin-bottom: 15px;
 
-    font-size: 25px;
+    font-size: 24px;
     font-weight: bold;
 
     color: #16834b;
 }
 
 .product h2 {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .product p {
     color: #666;
-    margin-bottom: 15px;
+    margin-bottom: 14px;
 }
 
 .product strong {
     display: block;
 
-    font-size: 22px;
+    color: #16834b;
+
+    font-size: 23px;
 
     margin-bottom: 15px;
-
-    color: #16834b;
 }
 
 button {
@@ -93,56 +110,220 @@ button {
     cursor: pointer;
 
     font-size: 16px;
+
+    transition: 0.2s;
 }
 
 button:hover {
     background: #10683b;
 }
 
-.order-section {
-    display: none;
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 
-    width: 90%;
-    max-width: 600px;
+.order-section,
+.tracking-section {
+    width: 92%;
+    max-width: 650px;
 
     margin: 40px auto;
 
     background: white;
 
-    padding: 25px;
+    padding: 28px;
 
-    border-radius: 15px;
+    border-radius: 18px;
 
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.07);
 }
 
-.order-section h2 {
-    margin-bottom: 15px;
+.order-section {
+    display: none;
+}
+
+.selected-product {
+    background: #eefaf2;
+    padding: 12px;
+    border-radius: 10px;
+    margin: 15px 0;
+    color: #16834b;
+    font-weight: bold;
 }
 
 .order-section input,
-.order-section textarea {
+.order-section textarea,
+.tracking-section input {
     width: 100%;
 
-    padding: 13px;
+    padding: 14px;
 
     margin: 8px 0;
 
-    border: 1px solid #ccc;
+    border: 1px solid #d5d5d5;
 
-    border-radius: 8px;
+    border-radius: 10px;
 
     font-size: 16px;
+
+    outline: none;
+}
+
+.order-section input:focus,
+.order-section textarea:focus,
+.tracking-section input:focus {
+    border-color: #16834b;
 }
 
 .order-section textarea {
-    height: 100px;
-
+    height: 110px;
     resize: vertical;
 }
 
-.order-section button {
-    width: 100%;
-
+.order-section h3 {
     margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.order-section > button {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.order-result {
+    display: none;
+
+    margin-top: 20px;
+
+    padding: 20px;
+
+    background: #ecfff2;
+
+    border: 1px solid #b9ebc8;
+
+    border-radius: 14px;
+
+    text-align: center;
+}
+
+.order-result h3 {
+    color: #16834b;
+    margin-bottom: 10px;
+}
+
+#newOrderNumber {
+    display: block;
+
+    font-size: 25px;
+
+    color: #16834b;
+
+    margin: 8px 0 15px;
+}
+
+.tracking-section {
+    text-align: center;
+}
+
+.tracking-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.tracking-form input {
+    margin: 0;
+}
+
+.tracking-form button {
+    white-space: nowrap;
+}
+
+.tracking-message {
+    margin-top: 15px;
+    color: #a00000;
+}
+
+.tracking-result {
+    display: none;
+    margin-top: 20px;
+}
+
+.tracking-card {
+    background: #f8fffa;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: right;
+}
+
+.tracking-card h3 {
+    color: #16834b;
+    margin-bottom: 10px;
+}
+
+.tracking-info {
+    margin-bottom: 18px;
+}
+
+.tracking-info div {
+    padding: 7px 0;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.status-timeline {
+    margin-top: 20px;
+}
+
+.status-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+}
+
+.status-icon {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    background: #ddd;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
+.status-step.active .status-icon {
+    background: #16834b;
+    color: white;
+}
+
+.status-step.active strong {
+    color: #16834b;
+}
+
+@media (max-width: 600px) {
+
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .order-section,
+    .tracking-section {
+        width: 94%;
+        padding: 20px;
+    }
+
+    .tracking-form {
+        flex-direction: column;
+    }
+
+    .tracking-form button {
+        width: 100%;
+    }
 }
