@@ -23,6 +23,7 @@ const supabaseClient =
 
 
 let selectedProduct = null;
+let trackingTimer = null;
 
 
 /* =========================
@@ -34,20 +35,29 @@ function openOrder(
     productName,
     productPrice
 ) {
+
     selectedProduct = {
         id: productId,
         name: productName,
         price: productPrice
     };
 
+
     document.getElementById(
         "selectedProduct"
     ).innerText =
         `المنتج المختار: ${productName} - ${productPrice} جنيه`;
 
+
     document.getElementById(
         "orderSection"
     ).style.display = "block";
+
+
+    document.getElementById(
+        "orderResult"
+    ).style.display = "none";
+
 
     document.getElementById(
         "orderSection"
@@ -128,30 +138,34 @@ async function sendOrder() {
 
 
     if (!allowedTypes.includes(paymentFile.type)) {
+
         alert(
             "نوع الصورة غير مسموح.\n\n" +
             "المسموح: JPG أو PNG أو WEBP"
         );
+
         return;
     }
 
 
     if (paymentFile.size > 5 * 1024 * 1024) {
+
         alert(
             "حجم الصورة كبير جدًا.\n\n" +
             "الحد الأقصى 5 ميجابايت."
         );
+
         return;
     }
 
 
     const sendButton =
-        document.querySelector(
-            "#orderSection button"
+        document.getElementById(
+            "sendOrderButton"
         );
 
 
-    const originalButtonText =
+    const originalText =
         sendButton.innerText;
 
 
@@ -212,7 +226,7 @@ async function sendOrder() {
             );
 
             alert(
-                "حصلت مشكلة أثناء رفع صورة الدفع.\n\n" +
+                "حصلت مشكلة أثناء رفع صورة الدفع:\n\n" +
                 uploadError.message
             );
 
@@ -221,45 +235,44 @@ async function sendOrder() {
 
 
         console.log(
-            "IMAGE UPLOADED:",
+            "IMAGE UPLOADED",
             uploadData
         );
 
 
         /* =========================
-           إنشاء الطلب عن طريق RPC
+           إنشاء الطلب
         ========================= */
 
         const {
-            data: createdOrderNumber,
+            data: orderNumber,
             error: orderError
         } =
-            await supabaseClient
-                .rpc(
-                    "create_order",
-                    {
-                        p_product_id:
-                            selectedProduct.id,
+            await supabaseClient.rpc(
+                "create_order",
+                {
+                    p_product_id:
+                        selectedProduct.id,
 
-                        p_product_name:
-                            selectedProduct.name,
+                    p_product_name:
+                        selectedProduct.name,
 
-                        p_product_price:
-                            selectedProduct.price,
+                    p_product_price:
+                        selectedProduct.price,
 
-                        p_customer_name:
-                            name,
+                    p_customer_name:
+                        name,
 
-                        p_customer_phone:
-                            phone,
+                    p_customer_phone:
+                        phone,
 
-                        p_customer_address:
-                            address,
+                    p_customer_address:
+                        address,
 
-                        p_payment_proof_url:
-                            filePath
-                    }
-                );
+                    p_payment_proof_url:
+                        filePath
+                }
+            );
 
 
         if (orderError) {
@@ -270,8 +283,6 @@ async function sendOrder() {
             );
 
 
-            /* حذف الصورة لو إنشاء الطلب فشل */
-
             await supabaseClient.storage
                 .from("payment-proofs")
                 .remove([
@@ -280,7 +291,7 @@ async function sendOrder() {
 
 
             alert(
-                "حصلت مشكلة أثناء حفظ الطلب.\n\n" +
+                "حصلت مشكلة أثناء حفظ الطلب:\n\n" +
                 orderError.message
             );
 
@@ -288,8 +299,18 @@ async function sendOrder() {
         }
 
 
-        const orderNumber =
-            createdOrderNumber;
+        /* =========================
+           عرض نجاح الطلب
+        ========================= */
+
+        document.getElementById(
+            "newOrderNumber"
+        ).innerText = orderNumber;
+
+
+        document.getElementById(
+            "orderResult"
+        ).style.display = "block";
 
 
         /* =========================
@@ -317,7 +338,7 @@ ${phone}
 العنوان:
 ${address}
 
-حالة الطلب:
+الحالة:
 قيد المراجعة
 
 تم حفظ صورة إثبات الدفع داخل النظام.
@@ -328,17 +349,6 @@ ${address}
             `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
                 message
             )}`;
-
-
-        /* =========================
-           نجاح
-        ========================= */
-
-        alert(
-            "تم تسجيل الطلب بنجاح ✅\n\n" +
-            "رقم الطلب:\n" +
-            orderNumber
-        );
 
 
         window.open(
@@ -366,6 +376,16 @@ ${address}
         ).value = "";
 
 
+        /* عرض التتبع */
+
+        document.getElementById(
+            "trackingNumber"
+        ).value = orderNumber;
+
+
+        trackOrder();
+
+
     } catch (error) {
 
         console.error(
@@ -382,12 +402,317 @@ ${address}
             )
         );
 
-
     } finally {
 
         sendButton.disabled = false;
 
         sendButton.innerText =
-            originalButtonText;
+            originalText;
     }
+}
+
+
+/* =========================
+   النزول للتتبع
+========================= */
+
+function focusTracking() {
+
+    document.getElementById(
+        "trackingSection"
+    ).scrollIntoView({
+        behavior: "smooth"
+    });
+
+    document.getElementById(
+        "trackingNumber"
+    ).focus();
+}
+
+
+/* =========================
+   تتبع الطلب
+========================= */
+
+async function trackOrder() {
+
+    const orderNumber =
+        document
+            .getElementById("trackingNumber")
+            .value
+            .trim();
+
+
+    const message =
+        document.getElementById(
+            "trackingMessage"
+        );
+
+
+    const result =
+        document.getElementById(
+            "trackingResult"
+        );
+
+
+    if (!orderNumber) {
+
+        message.innerText =
+            "اكتب رقم الطلب أولاً.";
+
+        result.style.display =
+            "none";
+
+        return;
+    }
+
+
+    message.innerText =
+        "جاري البحث...";
+
+
+    result.style.display =
+        "none";
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.rpc(
+            "get_order_tracking",
+            {
+                p_order_number:
+                    orderNumber
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "TRACKING ERROR:",
+            error
+        );
+
+
+        message.innerText =
+            "حصل خطأ أثناء البحث عن الطلب.";
+
+        return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+        message.innerText =
+            "رقم الطلب غير موجود.";
+
+        return;
+    }
+
+
+    const order =
+        data[0];
+
+
+    message.innerText =
+        "";
+
+
+    result.innerHTML =
+        createTrackingHTML(order);
+
+
+    result.style.display =
+        "block";
+
+
+    startTrackingRefresh(
+        order.order_number
+    );
+}
+
+
+/* =========================
+   إنشاء واجهة الحالة
+========================= */
+
+function createTrackingHTML(order) {
+
+    const statusMap = {
+
+        pending: {
+            label: "قيد المراجعة",
+            index: 0
+        },
+
+        confirmed: {
+            label: "تم تأكيد الطلب",
+            index: 1
+        },
+
+        preparing: {
+            label: "جاري تجهيز الطلب",
+            index: 2
+        },
+
+        shipped: {
+            label: "تم شحن الطلب",
+            index: 3
+        },
+
+        delivered: {
+            label: "تم تسليم الطلب",
+            index: 4
+        }
+
+    };
+
+
+    const current =
+        statusMap[order.status] ||
+        statusMap.pending;
+
+
+    const steps = [
+        "قيد المراجعة",
+        "تم تأكيد الطلب",
+        "جاري تجهيز الطلب",
+        "تم شحن الطلب",
+        "تم تسليم الطلب"
+    ];
+
+
+    let timelineHTML = "";
+
+
+    steps.forEach(
+        (step, index) => {
+
+            const active =
+                index <= current.index
+                    ? "active"
+                    : "";
+
+
+            timelineHTML += `
+                <div class="status-step ${active}">
+
+                    <div class="status-icon">
+                        ${
+                            index <= current.index
+                                ? "✓"
+                                : ""
+                        }
+                    </div>
+
+                    <strong>
+                        ${step}
+                    </strong>
+
+                </div>
+            `;
+        }
+    );
+
+
+    const date =
+        new Date(
+            order.created_at
+        ).toLocaleString(
+            "ar-EG"
+        );
+
+
+    return `
+
+        <div class="tracking-card">
+
+            <h3>
+                الطلب ${order.order_number}
+            </h3>
+
+
+            <div class="tracking-info">
+
+                <div>
+                    <strong>المنتج:</strong>
+                    ${order.product_name}
+                </div>
+
+                <div>
+                    <strong>السعر:</strong>
+                    ${order.product_price} جنيه
+                </div>
+
+                <div>
+                    <strong>تاريخ الطلب:</strong>
+                    ${date}
+                </div>
+
+                <div>
+                    <strong>الحالة الحالية:</strong>
+                    ${current.label}
+                </div>
+
+            </div>
+
+
+            <div class="status-timeline">
+
+                ${timelineHTML}
+
+            </div>
+
+        </div>
+    `;
+}
+
+
+/* =========================
+   تحديث تلقائي للحالة
+========================= */
+
+function startTrackingRefresh(orderNumber) {
+
+    clearInterval(
+        trackingTimer
+    );
+
+
+    trackingTimer =
+        setInterval(
+            async () => {
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient.rpc(
+                        "get_order_tracking",
+                        {
+                            p_order_number:
+                                orderNumber
+                        }
+                    );
+
+
+                if (
+                    !error &&
+                    data &&
+                    data.length > 0
+                ) {
+
+                    document.getElementById(
+                        "trackingResult"
+                    ).innerHTML =
+                        createTrackingHTML(
+                            data[0]
+                        );
+                }
+
+            },
+            15000
+        );
 }
