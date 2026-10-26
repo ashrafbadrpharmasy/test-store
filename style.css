@@ -206,3 +206,31 @@ textarea {
         width: 100%;
     }
 }
+
+
+.header-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin:18px 0 8px; }
+.header-actions button { min-width:150px; }
+button.light-button { background:#fff; color:#16834b; }
+.auth-status { color:#fff; margin-top:8px; }
+.cart-total { display:flex; justify-content:space-between; gap:12px; padding:16px 0; border-top:1px solid #e4eee7; margin-top:12px; }
+.cart-total strong { color:#16834b; font-size:20px; }
+.cart-row { display:flex; justify-content:space-between; align-items:center; gap:15px; padding:14px 0; border-bottom:1px solid #edf2ee; }
+.cart-row p { color:#777; margin-top:4px; }
+.cart-controls { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.cart-controls button { min-width:36px; padding:8px 11px; }
+.remove-button { background:#b3261e; }
+#checkoutButton { margin-left:8px; }
+#authMessage { margin-top:12px; color:#a00000; overflow-wrap:anywhere; }
+#authSection p { margin:8px 0; color:#666; }
+#otpStep { margin-top:10px; }
+#otpStep button { width:100%; }
+#sendOtpButton { width:100%; }
+#orderSection h3 { margin-top:15px; }
+#orderSection > p { color:#666; margin:8px 0; }
+#sendOrderButton { width:100%; margin-top:10px; }
+@media(max-width:600px) {
+  .cart-row { align-items:flex-start; flex-direction:column; }
+  .cart-controls { width:100%; }
+  .header-actions { flex-direction:column; align-items:stretch; }
+  .header-actions button { width:100%; }
+}
